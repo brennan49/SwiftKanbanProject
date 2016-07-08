@@ -49,30 +49,6 @@ def sortUsers(lastLoginInfo, currentDate):
     return usersToMessage
 
 theUsers = sortUsers(loginInfo, threeMonths)
-"""
-def sendMail(sender, userPass, toaddr):
-    emailAddr = []
-    for user in toaddr:
-        emailAddr.append(user["emailAddress"])
-    msg = MIMEMultipart()
-    msg['From'] = sender
-    msg['To'] = ", ".join(emailAddr)
-    msg['Subject'] = 'Automated message'
-
-    body = """"""
-    msg.attach(MIMEText(body, 'plain'))
-    #what are these values below for optum's servers?
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender, userPass)
-    text = msg.as_string()
-    server.sendmail(msg.get("From"), emailAddr, text)
-    print "Message Sent"
-    server.quit()
-
-sendees = [{"emailAddress": "devlin.brennan@optum.com"}, {"emailAddress": "intreeged@gmail.com"}]
-
-sendMail("devlinbrennan@gmail.com", "Brenndev@49", sendees)"""
 
 def sendMessage(sender, userPass, toaddr):
     msg = MIMEMultipart()
