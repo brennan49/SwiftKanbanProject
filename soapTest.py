@@ -4,12 +4,16 @@ import pprint
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 #getAllUsersLastLogin(xs:string userLoginId, )
 
 threeMonths = date.today() + relativedelta(months=-3)
+print threeMonths
 
-url = 'https://login.swiftkanban.com/axis2/services/TeamMemberService?wsdl'
+url = 'https://login.swift-kanban.com/axis2/services/TeamMemberService?wsdl'
 client = Client(url)
 
 security = Security()
@@ -27,10 +31,10 @@ for x in listUsers:
 lastLogin = client.service.getAllUsersLastLogin('devlin.brennan@optum.com', users)
 
 loginInfo = lastLogin[0]
-pprint.pprint(loginInfo)
+#pprint.pprint(loginInfo)
 
 
-def compareDates(lastLoginInfo, currentDate):
+def sortUsers(lastLoginInfo, currentDate):
     usersToMessage = []
     for date in lastLoginInfo:
         theDate = date["_lastLoginDate"]
@@ -42,11 +46,38 @@ def compareDates(lastLoginInfo, currentDate):
         lastLogged = datetime.strptime(lastLogin, '%Y-%m-%d')
         if(lastLogged < threeMonths):
             usersToMessage.append({"username": date["_userName"], "emailAddress": date["_emailAddress"]})
-    #return usersToMessage
 
-def sortLoginDates(lastLogInInfo, currentDate):
-    {}
+    return usersToMessage
 
-theUsers = compareDates(loginInfo, threeMonths)
+theUsers = sortUsers(loginInfo, threeMonths)
 
-print theUsers
+def sendMail(sender, userPass, toaddr):
+    emailAddr = []
+    for user in toaddr:
+        print user["emailAddress"]
+        emailAddr.append(user["emailAddress"])
+    msg = MIMEMultipart()
+    msg['From'] = sender
+    msg['To'] = emailAddr
+    msg['Subject'] = 'Automated message'
+
+    body = """This is an automated test message to multiple parties
+              If you get this, please let me know, I would like to test out
+
+              sending an e-mail with multiple lines and spaces.
+
+              Thank you,
+
+              Devlin"""
+    msg.attach(MIMEText(body, 'plain'))
+    #what are these values below for optum's servers?
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender, userPass)
+    text = msg.as_string()
+    server.sendmail(msg["From"], msg["To"].split(","), text)
+    server.quit()
+
+sendees = [{"emailAddress": "devlin.brennan@optum.com"}, {"emailAddress": "tien.bui@optum.com"}]
+for sendee in sendees:
+    sendMail("devlinbrennan@gmail.com", "Brenndev@49", sendee)
