@@ -46,10 +46,6 @@ def sortUsers(lastLoginInfo, currentDate):
             usersToMessage.append({"username": date["_userName"], "emailAddress": date["_emailAddress"]})
     return usersToMessage
 
-#theUsers = sortUsers(loginInfo, threeMonths)
-#for users in theUsers:
-    #print users["emailAddress"]
-
 def sendMail(sender, toaddr):
     msg = MIMEMultipart()
     msg['From'] = sender
@@ -60,25 +56,20 @@ def sendMail(sender, toaddr):
 
 If you have recieved this message, it means that you have not logged into
 SwiftKanban in 3+ months.  As we would like to reattain these licenses for the
-software, we ask you that please either e-mail .... to have your account deleted
+software, we ask you that please either e-mail devlin.brennan@optum.com to have your account deleted
 if you no longer need it else, please log into your account.
 
 This message is set up to run once a month for people that have not logged in in over
 a month.
 
-Thank you,
-
-..."""
+Thank you
+"""
     msg.attach(MIMEText(body, 'plain'))
     #what are these values below for optum's servers?
     server = smtplib.SMTP('mailo2.uhc.com', 25)
     text = msg.as_string()
     server.sendmail(sender, toaddr, text)
     server.quit()
-
-#sendees = ["devlin.brennan@optum.com", "tien.bui@optum.com"]
-#for sendee in sendees:
-#    sendMail("devlin.brennan@optum.com", sendee)
 
 def main():
    theUsers = getUsersToMessage()
@@ -89,8 +80,8 @@ def main():
    for users in messageUsers:
        userEmails.append(users["emailAddress"])
    pprint.pprint(userEmails)
-   #sendees = ["devlin.brennan@optum.com", "tien.bui@optum.com"]
-   #for sendee in sendees:
-   #    sendMail("devlin.brennan@optum.com", sendee)
+   sendees = ["devlin.brennan@optum.com", "tien.bui@optum.com", "michael_blaha@optum.com"]
+   for sendee in sendees:
+       sendMail("devlin.brennan@optum.com", sendee)
 
 main()
