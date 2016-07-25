@@ -8,15 +8,15 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-#C:\Python27\python.exe C:\Users\dbrennan\PycharmProjects\SwitfKanban_Project\soapTest.py
+#C:\Python27\python.exe C:\Users\dbrennan\PycharmProjects\SwitfKanban_Project\swift_cleanup.py
 
 #Communicates with SwiftKanban servers to get a list of all users that have not logged
-#in in longer than 3 moths
+#in in longer than 3 months
 def getUsersToMessage():
     url = 'https://login.swift-kanban.com/axis2/services/TeamMemberService?wsdl'
     client = Client(url)
     security = Security()
-    token = UsernameToken('', '')
+    token = UsernameToken('devlin.brennan@optum.com', 'devBrenn49')
     security.tokens.append(token)
     client.set_options(wsse=security)
     result = client.service.getAllActiveUsersInOrg('devlin.brennan@optum.com')
@@ -40,7 +40,8 @@ def sortUsers(lastLoginInfo, currentDate):
         threeMonths = datetime.strptime(currentDate, '%Y-%m-%d')
         lastLogged = datetime.strptime(lastLogin, '%Y-%m-%d')
         if(lastLogged < threeMonths):
-            usersToMessage.append({"username": date["_userName"], "emailAddress": date["_emailAddress"]})
+            usersToMessage.append({"username": "{0}".format(date["_userName"]), "emailAddress": "{0}".format(date["_emailAddress"])})
+    #pprint.pprint(usersToMessage)
     return usersToMessage
 
 def sendMail(sender, toaddr):
@@ -67,14 +68,21 @@ Thank you
     server.sendmail(sender, toaddr, text)
     server.quit()
 
+def fileOutput(userInfo):
+    with open("New_User_List", "w+") as file_handler:
+        for user in userInfo:
+            file_handler.write("%s" % user)
+
 def main():
    theUsers = getUsersToMessage()
    threeMonths = date.today() + relativedelta(months=-3)
    messageUsers = sortUsers(theUsers, threeMonths)
-   userEmails = []
-   for users in messageUsers:
-       userEmails.append(users["emailAddress"])
-   for sendee in userEmails:
-       sendMail("swift.users@optum.com", sendee)
+   fileOutput(messageUsers)
+   #userEmails = []
+   #for users in messageUsers:
+   #    userEmails.append(users["emailAddress"])
+   #for sendee in userEmails:
+    #   sendMail("swift.users@optum.com", sendee)
+   #sendMail("swift.users@optum.com", "devlin.brennan@optum.com")
 
 main()
