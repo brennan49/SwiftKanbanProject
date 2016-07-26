@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -23,8 +24,8 @@ def compareFiles(newFile, originalFile):
 
 def collectUserToDelete(usersToDeleteFile):
     with open(usersToDeleteFile) as f:
-        content = f.read()
-    pprint.pprint(content)
+        content = json.load(f)
+    #pprint.pprint(content)
     userEmails = []
     for users in content:
         #ast.literal_eval(users)
@@ -42,12 +43,12 @@ def messageUsersToDelete(sender, toaddr):
 
     body = """Hello,
 
-    If you have recieved this message, it means that you have not responded to our emails to
-    either log into your SwiftKanban account or emailed us to have it deleted so we have automatically
-    put your account onto our list of those to delete. If you still wish to keep your account inform us
-    by sending a message to swift.users@optum.com as soon as possible.
+If you have recieved this message, it means that you have not responded to our emails to
+either log into your SwiftKanban account or emailed us to have it deleted so we have automatically
+put your account onto our list of those to delete. If you still wish to keep your account inform us
+by sending a message to swift.users@optum.com as soon as possible.
 
-    Thank you
+Thank you
     """
     msg.attach(MIMEText(body, 'plain'))
     server = smtplib.SMTP('mailo2.uhc.com', 25)
@@ -57,9 +58,12 @@ def messageUsersToDelete(sender, toaddr):
 
 def main():
     compareFiles("newUserFile.txt", "pastUserFile.txt")
-    deleteUsers = collectUserToDelete("Users_to_Delete.txt")
+    deleteUsers = collectUserToDelete("New_User_List")
+    users = [u'devlin.brennan@optum.com', u'tien.bui@optum.com']
+    for theUser in users:
+        messageUsersToDelete("swift.users@optum.com", theUser)
     #for user in deleteUsers:
         #messageUsersToDelete("swift.users@optum.com", user)
-    print deleteUsers
+    pprint.pprint(deleteUsers)
 
 main()

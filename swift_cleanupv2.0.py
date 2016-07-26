@@ -7,6 +7,7 @@ from datetime import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import json
 
 #C:\Python27\python.exe C:\Users\dbrennan\PycharmProjects\SwitfKanban_Project\swift_cleanup.py
 
@@ -70,8 +71,7 @@ Thank you
 
 def fileOutput(userInfo):
     with open("New_User_List", "w+") as file_handler:
-        for user in userInfo:
-            file_handler.write("%s" % user)
+        json.dump(userInfo,file_handler)
 
 def main():
    theUsers = getUsersToMessage()
