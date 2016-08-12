@@ -1,0 +1,39 @@
+# compareFiles README
+
+This program has a series of functions meant to compare files, collect a list of users to permanently 
+delete, overwrite and format files, and send messages to both users to be deleted and to the admin.
+
+ The function compareFiles(), takes in two files as arguments and compare them to find if any users
+ are found in both files.  If a user is in both files, it means they have not responded to our warning 
+ messages that they need to log in to keep their account else email us to delete it.  It will add such 
+ users to a new files called Users_to_Delete.txt. 
+ -It encodes this list as into a json readable format.
+ -each user is saved in the format of a dictionary with their email address and username:
+  ex: {'emailAddress': '...@optum.com', 'username': '...'}
+ 
+ The function collectUserToDelete() takes in a list of all of the users to permanently delete produced
+ by the compareFiles() function and creates a new list with just their emails.
+ 
+ The functions overWriteFile() and formatFile() are to overwrite the old file containing the list of users 
+ to delete with the new file of list of users to delete. The formateFile() function is meant to format the 
+ list of users to permanently delete such that it is human readable and will be emailed to the swiftkanban
+ administrator
+ 
+ The messageUsersToDelete() function sends a warning message to the users in the list of users to 
+ permanently delete to inform them that they have not logged in or asked to have their account deleted during
+ the month long grace period between when the program is scheduled to run.
+ 
+ The sendFile() function is meant to send the list of all of the users to permanently delete formatted to be
+ human readable to the administrator for swiftkanban for Optum.
+ 
+ required libraries:
+ Python 2.7
+ 
+ all libraries should already be accessible however, this program imports the following libraries:
+ sys
+ os
+ jsonsmtplib
+ email.mime.multipart
+ email.mime.text
+ email.mime.application
+ os.path
