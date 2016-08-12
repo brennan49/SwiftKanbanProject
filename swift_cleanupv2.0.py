@@ -17,15 +17,15 @@ def getUsersToMessage():
     url = 'https://login.swift-kanban.com/axis2/services/TeamMemberService?wsdl'
     client = Client(url)
     security = Security()
-    token = UsernameToken('devlin.brennan@optum.com', 'devBrenn49')
+    token = UsernameToken('SAM_SK_LOGIN', 'SAMS_SK_LOGIN')
     security.tokens.append(token)
     client.set_options(wsse=security)
-    result = client.service.getAllActiveUsersInOrg('devlin.brennan@optum.com')
+    result = client.service.getAllActiveUsersInOrg('SAM_SK_LOGIN')
     listUsers = result[0]
     users = []
     for x in listUsers:
         users.append(x["_loginId"])
-    lastLogin = client.service.getAllUsersLastLogin('devlin.brennan@optum.com', users)
+    lastLogin = client.service.getAllUsersLastLogin('SAM_SK_LOGIN', users)
     loginInfo = lastLogin[0]
     return loginInfo
 
@@ -45,6 +45,8 @@ def sortUsers(lastLoginInfo, currentDate):
     #pprint.pprint(usersToMessage)
     return usersToMessage
 
+
+#This sends an automated email to all of the users that have not logged in in 3+ months
 def sendMail(sender, toaddr):
     msg = MIMEMultipart()
     msg['From'] = sender
@@ -53,13 +55,10 @@ def sendMail(sender, toaddr):
 
     body = """Hello,
 
-If you have recieved this message, it means that you have not logged into
-SwiftKanban in 3+ months.  As we would like to reattain these licenses for the
-software, we ask you that please either e-mail swift.users@optum.com to have your account deleted
-if you no longer need it else, please log into your account.
-
-This message is set up to run once a month for people that have not logged in in over
-a month.
+You are receiving this email because you have not logged into your SwiftKanban account in 3 or more months.
+If you would like to keep your account please log in now.  This message will be sent out once a week every Friday.
+If you do not log in or no longer need you account, you will be placed into a list to have your account deleted at the
+end of every month
 
 Thank you
 """
@@ -69,6 +68,7 @@ Thank you
     server.sendmail(sender, toaddr, text)
     server.quit()
 
+#creates a file containing a list of all of the users that have not logged in in 3+ months.
 def fileOutput(userInfo):
     with open("New_User_List", "w+") as file_handler:
         json.dump(userInfo,file_handler)
@@ -78,11 +78,10 @@ def main():
    threeMonths = date.today() + relativedelta(months=-3)
    messageUsers = sortUsers(theUsers, threeMonths)
    fileOutput(messageUsers)
-   #userEmails = []
-   #for users in messageUsers:
-   #    userEmails.append(users["emailAddress"])
-   #for sendee in userEmails:
-    #   sendMail("swift.users@optum.com", sendee)
-   #sendMail("swift.users@optum.com", "devlin.brennan@optum.com")
+   userEmails = []
+   for users in messageUsers:
+       userEmails.append(users["emailAddress"])
+   for sendee in userEmails:
+       sendMail("swift.users@optum.com", sendee)
 
 main()
