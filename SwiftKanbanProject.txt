@@ -1,0 +1,41 @@
+#SwiftKanban Project README
+
+lines to change for the program
+swift_cleanupv2.0.py:
+	line 20: enter your swiftKanban login email address and password
+	line 23: enter your SW login email address
+	line 28: enter your SW login email address
+	lines 56-: modify these lines to create the body of the email you will send
+	line 85: enter the email address that you want people to send their responses to
+	
+compareFiles:
+	lines 87-: enter the body of the email you would like to send to the users to be deleted
+	line 109: enter the email of the person to send the file with names of users to delete
+	lines 113-: enter the body of the email you would like to send the file of users to delete to
+	line 135: enter the email to send from and the email address that will recieve the file
+	line 143: enter the email to send the file from (the list of users should be fully automated and not necessary to change)
+	
+	
+How to use crontab to schedule the program:
+*NOTE: you must be the root user of the server you will run the program on.
+Crontab syntax:
+[Minute] [Hour] [Day] [Month] [Weekday] program_being_used /location/to/the/program
+you can use an asterisk (*) to match any value.  Such as using an asterisk for the month would cause
+the command to run every month.
+ex:  0 13 * 1-6 * python /usr/bin/example.py (runs /usr/bin/example at noon every day, for the first six months of the year)
+
+-as root, type crontab -e
+-type the command like about for how often you want the program to run
+-to save your schedule hit :wq (exactly the same as using vim)
+
+For this program it will be set up for the swift_cleanupv2.py program to run every friday at 10am
+0 11 * * 5 python /usr/local/bin/swift_cleanupv2.py
+compareFiles set up to run once a month on the 28th at 10:15am
+15 11 28 8 * pyhton /usr/local/bin/compareFiles.py
+
+
+
+*NOTE:
+To request the email your are using to send these email to be able to send more emails in a short period of time, go to
+http://euts-platformops-sp.optum.com/COps/Lists/Optum%20SMTP%20Relay%20Requests/SMTP%20User.aspx and request it there.
+-Can only send to a max of 20 recipients in an hour.
