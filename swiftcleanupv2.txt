@@ -1,0 +1,40 @@
+# SwiftKanbanProject
+
+SwiftKanban cleanup README
+
+This program grabs information about all of the current users in the Functional Engineering organization
+on SwiftKanban.
+It first gets the user info of each user in the organization, puts them into a list, and then through
+an API call, gets information such as each users last login date as well as their login information
+(excluding password), etc.
+
+It then compares the date three months ago from the current date to the last login date of the user.
+If the user hasn't logged in for longer than three months they are added to a mailing list asking if they
+would like to keep their account or not.
+
+A group email, swift.users@optum.com has been created and will be used as the email to message if a user would
+like their account deleted.  
+
+An email will be sent to each user asking them to either login if they would like to keep their account else, they can 
+send a response to the dummy email to have their account deleted. 
+
+NOTE: in the getUsersToMessage() function, please provide a SwiftKanban username and password for the user that will be running 
+this program.
+
+This program is partnered with another called compareFiles.py.
+
+Requirements:
+Python 2.7
+
+non standard libraries:
+six (may already be installed if using linux)
+dateutil (may already be installed if using linux)
+DateTime
+suds
+
+To install these libraries, place python on the PATH, then use pip to install:
+
+>pip install (package_name)     //without the paranthesis
+
+if pip is not installed use easy_install to install it:
+>easy_install pip
