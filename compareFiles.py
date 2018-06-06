@@ -105,8 +105,8 @@ Thank you
 #forefully deleted by us.
 def sendFile(theFile):
     msg = MIMEMultipart()
-    msg['From'] = "swift.users@optum.com"
-    msg['To'] = "swift.users@optum.com"
+    msg['From'] = "swift.users@example.com"
+    msg['To'] = "swift.users@example.com"
     msg['Subject'] = 'This is a Test'
 
 #attach the body to the message to send can be modified to say whatever you want.
@@ -132,7 +132,7 @@ Thank you
 #contains the server and port number for optum and sends the email
     server = smtplib.SMTP('mailo2.uhc.com', 25)
     text = msg.as_string()
-    server.sendmail("swift.users@optum.com", "swift.users@optum.com", text)
+    server.sendmail("swift.users@example.com", "swift.users@example.com", text)
     server.quit()
 
 
@@ -140,7 +140,7 @@ def main():
     compareFiles("New_User_List", "Past_User_List")
     deleteUsers = collectUserToDelete("Users_to_Delete")
     for user in deleteUsers:
-        messageUsersToDelete("swift.users@optum.com", user)
+        messageUsersToDelete("swift.users@example.com", user)
     #format the Users_to_Delete file to be easier to read and place in a new file called UserList
     formatFile("Users_to_Delete")
     #Send the formatted file to our administrator or whomever takes care of deleting users
